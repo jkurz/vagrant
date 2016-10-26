@@ -1,0 +1,19 @@
+#!/bin/bash
+SESSION=$USER
+
+tmux -2 new-session -d -s $SESSION
+
+# Setup a window to loaunch the os161 kernal
+tmux new-window -t $SESSION:1 -n 'os161 kernal'
+tmux split-window -h
+tmux select-pane -t 0
+tmux send-keys "cd $HOME/root" C-m
+tmux send-keys "sys161 -w kernel" C-m
+tmux select-pane -t 1
+tmux send-keys "cd $HOME/root" C-m
+tmux send-keys "os161-gdb sys161 kernel" C-m
+tmux send-keys "target remote unix:.sockets/gdb" C-m
+tmux send-keys "c" C-m
+tmux select-pane -t 0
+# Attach to session
+tmux -2 attach-session -t $SESSION
